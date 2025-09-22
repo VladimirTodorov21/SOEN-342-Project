@@ -1,1 +1,19 @@
+=============================
+|         Meeting 1         |
+=============================
+
+Date Present: 21 September 2025
+Time Spent: 7:00 PM - 8:00 PM
+
+Members Present:
+- Vladimir
+- Richard Joseph
+- Mohamad
+
+Structure:
+- Breakdown and distribution of tasks
+------> 7 classes (including main, result searching, connection finding, multi-stop connections, train connections, search criterias, csv parsing file)
+- Overarching Structure of the GitHub folders
+- Object-Oriented Language chosen: Python
+- Interface: console (thusfar until further notice and clarification)
 
