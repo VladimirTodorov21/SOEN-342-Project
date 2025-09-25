@@ -1,6 +1,16 @@
 from SearchCriteria import *
-# from TrainConnection import *
+from ConnectionCatalog import *
 
 class ConnectionFinder:
     search_criteria: SearchCriteria
-    # train_connections: list[TrainConnection]
+    connection_catalog: ConnectionCatalog
+    direct_connectons:list[Connection]
+    multi_stop_connections:list[Connection]
+
+    def __init__(self,search,catalog):
+       self.search_criteria=search
+       self.connection_catalog=catalog
+
+
+    def findDirectConnections(self):
+        pass

@@ -1,8 +1,10 @@
 import csv
-from Connection import *
+from typing import List
+from Connection import Connection
 class ConnectionCatalog:
 
-    conection_catalog=list[Connection]
+    
+    connection_catalog: List[Connection]=[]
    
     def __init__(self):
         self.readCSV()
@@ -24,8 +26,8 @@ class ConnectionCatalog:
              reader=csv.DictReader(csvfile)
              for row in reader:
                  data = {keymap[key]: row[key] for key in keymap}
-                 connection=Connection(**data)
-                 self.conection_catalog.append(connection)
+                 stub=Connection(**data)
+                 self.connection_catalog.append(stub)
                 
              
 

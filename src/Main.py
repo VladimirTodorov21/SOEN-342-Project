@@ -8,10 +8,12 @@ class Main:
              
 
     def run(self):
-        # s1 = SearchCriteria()
-        # s1.collect_user_input()
-        # s1.display_user_input()
-        test=ConnectionCatalog()
+         search = SearchCriteria()
+         search.collect_user_input()
+         search.display_user_input()
+         catalog=ConnectionCatalog()
+         connectionFinder= ConnectionFinder(search,catalog)
+         connectionFinder.findDirectConnections()
         
 
 if __name__ == "__main__":
