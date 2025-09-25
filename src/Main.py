@@ -14,7 +14,7 @@ class Main:
          catalog=ConnectionCatalog()
          connectionFinder= ConnectionFinder(search,catalog)
          connectionFinder.findDirectConnections()
-        
+         connectionFinder.printDirectConnections()
 
 if __name__ == "__main__":
     main = Main()
