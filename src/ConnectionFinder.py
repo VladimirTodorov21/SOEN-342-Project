@@ -12,8 +12,10 @@ class ConnectionFinder:
        self.search_criteria=search
        self.connection_catalog=catalog
 
-
-    def findDirectConnections(self):
+    def getMultiStopConnections(self):
+         pass
+    def findConnections(self):
+        # checking each attribute of a connection if it matches with search_criteria's attributes for direct connections
         for connection in self.connection_catalog.connection_catalog:
             if (connection.departure_city!=self.search_criteria.departure_city):
                 continue
@@ -31,11 +33,14 @@ class ConnectionFinder:
                     continue
             if ( self.search_criteria.days_of_operation) and (connection.days_of_operation!=self.search_criteria.days_of_operation):
                    continue
-                 
             self.direct_connections.append(connection)
+        
+        #if direct_connections is empty after iterating, call getMultiStopConnections to determine 1/2-stop connections
+        if(not self.direct_connections):
+             self.getMultiStopConnections()
             
 
-    def printDirectConnections(self):
+    def printConnections(self):
         if (self.direct_connections):
             print("\n----------Direct Connections------------")
             for index,connection in enumerate(self.direct_connections):

@@ -32,9 +32,3 @@ class ConnectionCatalog:
                  stub=Connection(**data)
                  self.connection_catalog.append(stub)
                 
-    # def printAllArrival(self):
-    #     for connection in self.connection_catalog:
-    #         print (connection.arrival_time)
-
-
-        
