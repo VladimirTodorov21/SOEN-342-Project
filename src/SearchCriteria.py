@@ -1,5 +1,4 @@
 from typing import List
-
 class SearchCriteria:
     # Attributes
     departure_city: str
@@ -10,7 +9,6 @@ class SearchCriteria:
     days_of_operation: List[str]
     first_class_price: float
     second_class_price: float 
-    
     # Default Constructor
     def __init__(self):
         self.departure_city = ""
@@ -18,7 +16,7 @@ class SearchCriteria:
         self.departure_time = ""
         self.arrival_time = ""
         self.train_type = ""
-        self.operating_days = [""]
+        self.days_of_operation = []
         self.first_class_price = 0.0
         self.second_class_price = 0.0
 
@@ -106,7 +104,7 @@ class SearchCriteria:
             if departure_city != "":
                 break
             print("Please try again! Don't leave this field blank\n")
-        self.setDepartureCity(self, departure_city)
+        self.setDepartureCity(departure_city)
 
         arrival_city = ""
         while True:
@@ -114,42 +112,42 @@ class SearchCriteria:
             if arrival_city != "":
                 break
             print("Please try again! Don't leave this field blank\n")
-        self.setArrivalCity(self, arrival_city)
+        self.setArrivalCity( arrival_city)
 
         departure_time = input("[Optional] Enter the departure time (HH:MM) or leave blank: ").strip()
-        self.setDepartureTime(self, departure_time)
+        self.setDepartureTime( departure_time)
 
         arrival_time = input("[Optional] Enter the arrival time (HH:MM) or leave blank: ").strip()
-        self.setArrivalTime(self, arrival_time)
+        self.setArrivalTime( arrival_time)
 
         train_type = input("[Optional] Enter the type of train you wish to embark in or leave blank: ").strip()
-        self.setTrainType(self, train_type)
+        self.setTrainType( train_type)
 
         days_of_operation = input("[Optional] Enter the train's days of operation (e.g. Mon,Tue | Mon-Tue | Daily) or leave blank: ").strip()
-        self.setDaysOfOperation(self, days_of_operation)
+        self.setDaysOfOperation( days_of_operation)
 
         ticket_choice = input("[Optional] Enter what ticket class price you wish to look for (first or second) or leave blank: ").strip()
         if ticket_choice == "first":
             first_class_price = input("Enter the maximum amount you wish to pay for the first class ticket: ").strip()
-            self.setFirstClassPrice(self, first_class_price)
-            self.setSecondClassPrice(self, 0.0)
+            self.setFirstClassPrice( float(first_class_price))
+            self.setSecondClassPrice( 0.0)
         elif ticket_choice == "second":
             second_class_price = input("Enter the maximum amount you wish to pay for the second class ticket: ").strip()
-            self.setFirstClassPrice(self, 0.0)
-            self.setSecondClassPrice(self, second_class_price)
+            self.setFirstClassPrice( 0.0)
+            self.setSecondClassPrice( float(second_class_price))
         else:
-            self.setFirstClassPrice(self, 0.0)
-            self.setSecondClassPrice(self, 0.0)
+            self.setFirstClassPrice( 0.0)
+            self.setSecondClassPrice( 0.0)
     
     def display_user_input(self):
         print("\nCollected User Search Criteria:")
         print(f"----------------------------------------\n| {"Criteria":<20}| User Data\n----------------------------------------")
-        print(f"| {"Departure City:":<20}| {self.getDepartureCity(self)}")
-        print(f"| {"Arrival City:":<20}| {self.getArrivalCity(self)}")
-        print(f"| {"Departure Time:":<20}| {self.getDepartureTime(self)}")
-        print(f"| {"Arrival Time:":<20}| {self.getArrivalTime(self)}")
-        print(f"| {"Train Type:":<20}| {self.getTrainType(self)}")
-        print(f"| {"Days Of Operation:":<20}| {self.getDaysOfOperation(self)}")
-        print(f"| {"First Class Price:":<20}| {self.getFirstClassPrice(self)}")
-        print(f"| {"Second Class Price:":<20}| {self.getSecondClassPrice(self)}")
+        print(f"| {"Departure City:":<20}| {self.getDepartureCity()}")
+        print(f"| {"Arrival City:":<20}| {self.getArrivalCity()}")
+        print(f"| {"Departure Time:":<20}| {self.getDepartureTime()}")
+        print(f"| {"Arrival Time:":<20}| {self.getArrivalTime()}")
+        print(f"| {"Train Type:":<20}| {self.getTrainType()}")
+        print(f"| {"Days Of Operation:":<20}| {self.getDaysOfOperation() or "Any"}")
+        print(f"| {"First Class Price:":<20}| {self.getFirstClassPrice()}")
+        print(f"| {"Second Class Price:":<20}| {self.getSecondClassPrice()}")
         print("----------------------------------------")
