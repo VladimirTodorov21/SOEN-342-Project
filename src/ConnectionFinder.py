@@ -33,6 +33,7 @@ class ConnectionFinder:
                     continue
             if ( self.search_criteria.days_of_operation) and (connection.days_of_operation!=self.search_criteria.days_of_operation):
                    continue
+            
             self.direct_connections.append(connection)
         
         #if direct_connections is empty after iterating, call getMultiStopConnections to determine 1/2-stop connections

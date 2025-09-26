@@ -129,12 +129,12 @@ class SearchCriteria:
         ticket_choice = input("[Optional] Enter what ticket class price you wish to look for (first or second) or leave blank: ").strip()
         if ticket_choice == "first":
             first_class_price = input("Enter the maximum amount you wish to pay for the first class ticket: ").strip()
-            self.setFirstClassPrice( first_class_price)
+            self.setFirstClassPrice( float(first_class_price))
             self.setSecondClassPrice( 0.0)
         elif ticket_choice == "second":
             second_class_price = input("Enter the maximum amount you wish to pay for the second class ticket: ").strip()
             self.setFirstClassPrice( 0.0)
-            self.setSecondClassPrice( second_class_price)
+            self.setSecondClassPrice( float(second_class_price))
         else:
             self.setFirstClassPrice( 0.0)
             self.setSecondClassPrice( 0.0)
