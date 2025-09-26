@@ -1,4 +1,5 @@
 import csv
+from pathlib import Path
 from typing import List
 from Connection import Connection
 class ConnectionCatalog:
@@ -22,14 +23,18 @@ class ConnectionCatalog:
             "First Class ticket rate (in euro)": "firstClassRate",
             "Second Class ticket rate (in euro)": "secondClassRate",
         }
-        with open("./src/assets/eu_rail_network.csv",newline="",encoding='utf-8') as csvfile:
+        
+        CSV = Path(__file__).resolve().parent / "assets" / "eu_rail_network.csv"
+        with CSV.open(newline="",encoding='utf-8') as csvfile:
              reader=csv.DictReader(csvfile)
              for row in reader:
                  data = {keymap[key]: row[key] for key in keymap}
                  stub=Connection(**data)
                  self.connection_catalog.append(stub)
                 
-             
+    # def printAllArrival(self):
+    #     for connection in self.connection_catalog:
+    #         print (connection.arrival_time)
 
 
         

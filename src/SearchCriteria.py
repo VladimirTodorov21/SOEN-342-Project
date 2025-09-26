@@ -16,7 +16,7 @@ class SearchCriteria:
         self.departure_time = ""
         self.arrival_time = ""
         self.train_type = ""
-        self.days_of_operation = [""]
+        self.days_of_operation = []
         self.first_class_price = 0.0
         self.second_class_price = 0.0
 
@@ -147,7 +147,7 @@ class SearchCriteria:
         print(f"| {"Departure Time:":<20}| {self.getDepartureTime()}")
         print(f"| {"Arrival Time:":<20}| {self.getArrivalTime()}")
         print(f"| {"Train Type:":<20}| {self.getTrainType()}")
-        print(f"| {"Days Of Operation:":<20}| {self.getDaysOfOperation()}")
+        print(f"| {"Days Of Operation:":<20}| {self.getDaysOfOperation() or "Any"}")
         print(f"| {"First Class Price:":<20}| {self.getFirstClassPrice()}")
         print(f"| {"Second Class Price:":<20}| {self.getSecondClassPrice()}")
         print("----------------------------------------")
