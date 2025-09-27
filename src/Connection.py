@@ -37,6 +37,7 @@ class Connection:
             self.departure_time=departTime
             
             self.arrival_time=arrivalTime
+            self.plus_one_day=False
             if "(+1d)" in self.arrival_time:
                 self.arrival_time=self.arrival_time.replace("(+1d)","").strip()
                 self.plus_one_day=True
