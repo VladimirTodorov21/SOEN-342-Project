@@ -7,12 +7,12 @@ from datetime import timedelta
 class ConnectionFinder:
     search_criteria: SearchCriteria
     connection_catalog: ConnectionCatalog
-    direct_connections:List[Connection]=[]
-    multi_stop_connections:List[Connection]=[]
 
     def __init__(self,search,catalog):
        self.search_criteria=search
        self.connection_catalog=catalog
+       self.direct_connections=[]
+       self.multi_stop_connections=[]
 
     def getMultiStopConnections(self):
         for connection_1 in self.connection_catalog.connection_catalog:
@@ -40,6 +40,9 @@ class ConnectionFinder:
                     
 
     def findConnections(self):
+        self.direct_connections=[]
+        self.multi_stop_connections=[]
+
         # checking each attribute of a connection if it matches with search_criteria's attributes for direct connections
         for connection in self.connection_catalog.connection_catalog:
             if (connection.departure_city!=self.search_criteria.departure_city):
@@ -61,9 +64,7 @@ class ConnectionFinder:
             
             self.direct_connections.append(connection)
         
-        #if direct_connections is empty after iterating, call getMultiStopConnections to determine 1/2-stop connections
-        if(not self.direct_connections):
-             self.getMultiStopConnections()
+        self.getMultiStopConnections()
             
 
     def printConnections(self):
@@ -80,8 +81,9 @@ class ConnectionFinder:
                  print(f"| {'Days Of Operation:':<20}| {connection.days_of_operation}")
                  print(f"| {'First Class Price:':<20}| {connection.first_class_price}")
                  print(f"| {'Second Class Price:':<20}| {connection.second_class_price}")
+                 connection_duration=self.duration(connection.departure_time,connection.arrival_time,getattr(connection,'plus_one_day',False))
+                 print(f"| {'Total Connection Duration:':<20}| {connection_duration}")  
                  print("----------------------------------------\n")
-            print(f"Total Connection Duration: {self.getTotalDuration()}")  
             print(f"Total Amount (First Class): {self.getTotalPrice('first')}")
             print(f"Total Amount (Second Class): {self.getTotalPrice('second')}")   
 
@@ -93,8 +95,11 @@ class ConnectionFinder:
                  print(f" Second Connection: {connection_2.departure_city} -> {connection_2.arrival_city} at {connection_2.departure_time} -> {connection_2.arrival_time}")
                  print(f" Amount: {connection_1.first_class_price + connection_2.first_class_price} (First Class)")
                  print(f" Amount: {connection_1.second_class_price + connection_2.second_class_price} (Second Class)")
+                 connection1_duration=self.duration(connection_1.departure_time,connection_1.arrival_time,getattr(connection_1,'plus_one_day',False))
+                 connection2_duration=self.duration(connection_2.departure_time,connection_2.arrival_time,getattr(connection_2,'plus_one_day',False))
+                 connection_total_duration=connection1_duration+connection2_duration
+                 print(f"Total Connection Duration: {connection_total_duration}")  
                  print("----------------------------------------\n")
-            print(f"Total Connection Duration: {self.getTotalDuration()}")  
             print(f"Total Amount (First Class): {self.getTotalPrice('first')}")
             print(f"Total Amount (Second Class): {self.getTotalPrice('second')}") 
 
