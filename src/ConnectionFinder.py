@@ -84,8 +84,8 @@ class ConnectionFinder:
                  connection_duration=self.duration(connection.departure_time,connection.arrival_time,getattr(connection,'plus_one_day',False))
                  print(f"| {'Total Connection Duration:':<20}| {connection_duration}")  
                  print("----------------------------------------\n")
-            print(f"Total Amount (First Class): {self.getTotalPrice('first')}")
-            print(f"Total Amount (Second Class): {self.getTotalPrice('second')}")   
+            #print(f"Total Amount (First Class): {self.getTotalPrice('first')}")
+            #print(f"Total Amount (Second Class): {self.getTotalPrice('second')}")   
 
         if (self.multi_stop_connections): 
             print("\n----------Multiple Connections------------")
@@ -97,11 +97,12 @@ class ConnectionFinder:
                  print(f" Amount: {connection_1.second_class_price + connection_2.second_class_price} (Second Class)")
                  connection1_duration=self.duration(connection_1.departure_time,connection_1.arrival_time,getattr(connection_1,'plus_one_day',False))
                  connection2_duration=self.duration(connection_2.departure_time,connection_2.arrival_time,getattr(connection_2,'plus_one_day',False))
+                 connection_total_duration=connection1_duration+connection_wait_time+connection2_duration
                  connection_total_duration=connection1_duration+connection2_duration
                  print(f"Total Connection Duration: {connection_total_duration}")  
                  print("----------------------------------------\n")
-            print(f"Total Amount (First Class): {self.getTotalPrice('first')}")
-            print(f"Total Amount (Second Class): {self.getTotalPrice('second')}") 
+            #print(f"Total Amount (First Class): {self.getTotalPrice('first')}")
+            #print(f"Total Amount (Second Class): {self.getTotalPrice('second')}") 
 
         if not self.direct_connections and not self.multi_stop_connections:
              print("There are no connections that were found matching your criteria")
