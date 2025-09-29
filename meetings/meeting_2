@@ -1,0 +1,22 @@
+=============================
+|         Meeting 2         |
+=============================
+
+Date Present: 28 September 2025
+Time Spent: 7:00 PM - 7:30 PM
+
+Members Present:
+- Vladimir
+- Richard Joseph
+- Mohamad
+
+Structure:
+- Assessment of what was finsihed:
+- - All classes have been coded as well as 3 documentation documents were provided
+- Remaining Tasks
+- - Slight Refactoring in Main.py and ConnectionFinder.py 
+- - Additional parameters required for the logic of multistop connections searching method
+- - Update to the existing UML Domain Model
+- - Creating the System Operation Contracts
+- - Creating the System Sequence Interaction Diagrams
+- - Creating the UML Class Diagram for the code structure
