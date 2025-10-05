@@ -84,8 +84,7 @@ class ConnectionFinder:
                  connection_duration=self.duration(connection.departure_time,connection.arrival_time,getattr(connection,'plus_one_day',False))
                  print(f"| {'Total Connection Duration:':<20}| {connection_duration}")  
                  print("----------------------------------------\n")
-            print(f"Total Amount (First Class): {self.getTotalPrice('first')}")
-            print(f"Total Amount (Second Class): {self.getTotalPrice('second')}")   
+             
 
         if (self.multi_stop_connections): 
             print("\n----------Multiple Connections------------")
@@ -95,37 +94,16 @@ class ConnectionFinder:
                  print(f" Second Connection: {connection_2.departure_city} -> {connection_2.arrival_city} at {connection_2.departure_time} -> {connection_2.arrival_time}")
                  print(f" Amount: {connection_1.first_class_price + connection_2.first_class_price} (First Class)")
                  print(f" Amount: {connection_1.second_class_price + connection_2.second_class_price} (Second Class)")
-                 connection1_duration=self.duration(connection_1.departure_time,connection_1.arrival_time,getattr(connection_1,'plus_one_day',False))
-                 connection2_duration=self.duration(connection_2.departure_time,connection_2.arrival_time,getattr(connection_2,'plus_one_day',False))
-                 connection_total_duration=connection1_duration+connection2_duration
+                 connection_total_duration=self.duration(connection_1.departure_time,connection_1.arrival_time,connection_1.plus_one_day)+ \
+                                           self.duration(connection_1.arrival_time,connection_2.departure_time)+ \
+                                           self.duration(connection_2.departure_time,connection_2.arrival_time,connection_2.plus_one_day)
                  print(f"Total Connection Duration: {connection_total_duration}")  
                  print("----------------------------------------\n")
-            print(f"Total Amount (First Class): {self.getTotalPrice('first')}")
-            print(f"Total Amount (Second Class): {self.getTotalPrice('second')}") 
 
         if not self.direct_connections and not self.multi_stop_connections:
              print("There are no connections that were found matching your criteria")
 
-                        
-
-    def getTotalPrice(self,class_type="first"):
-        if self.direct_connections:
-             
-            if class_type=="first":
-                  return sum(connection.first_class_price for connection in self.direct_connections)
-             
-            elif class_type=="second":
-             return sum(connection.second_class_price for connection in self.direct_connections)
-            
-        elif self.multi_stop_connections:
-
-            if class_type=="first":
-                  return sum(connection_1.first_class_price + connection_2.first_class_price for connection_1,connection_2 in self.multi_stop_connections)
-             
-            elif class_type=="second":
-             return sum(connection_1.second_class_price + connection_2.second_class_price for connection_1,connection_2 in self.multi_stop_connections)    
-            
-        return 0.0    
+                    
 
 
     def duration(self,departure,arrival,plus_one_day=False):
@@ -136,43 +114,61 @@ class ConnectionFinder:
          if plus_one_day: time_arrival+=timedelta(days=1)
          return (time_arrival - time_departure)
     
-    def getTotalDuration(self):
-        if self.direct_connections:
-             return sum((self.duration(connection.departure_time,connection.arrival_time, connection.plus_one_day)
-                        for connection in self.direct_connections),
-                    timedelta(0)    
-             )
-        
-        elif self.multi_stop_connections:
-             return sum((self.duration(connection_1.departure_time,connection_1.arrival_time,connection_1.plus_one_day)+
-                        self.duration(connection_1.arrival_time,connection_2.departure_time)+
-                        self.duration(connection_2.departure_time,connection_2.arrival_time,connection_2.plus_one_day)
-                        for connection_1,connection_2 in self.multi_stop_connections),
-
-                    timedelta(0))
-        
-        return timedelta(0)
     
-    def sortPrice(self,class_type="first"):
-         sort_key=lambda connection: connection.first_class_price if class_type=="first" else connection.second_class_price
-         self.direct_connections.sort(key=sort_key)
+    def sorting(self, by="price", class_type ="first"):
 
-    def sortDuration(self):
-         sort_key=lambda connection: self.duration(connection.departure_time,connection.arrival_time,connection.plus_one_day)
-         self.direct_connections.sort(key=sort_key)    
+         print(f"Connections are being sorted by '{by}' " + (f" using class type: '{class_type}' for pricing." if by=="price" else "."))
 
-    def sortPriceMultiStop(self,class_type="first"):
-         sort_key=lambda both_connections: ( both_connections[0].first_class_price + both_connections[1].first_class_price  
-         if class_type=="first" 
-         else both_connections[0].second_class_price + both_connections[1].second_class_price
-        ) 
-         self.multi_stop_connections.sort(key=sort_key)
+         if by=="price":
+              self.direct_connections.sort(
+                   key =lambda c: c.first_class_price if class_type== "first" else c.second_class_price #direct connections PRICE
+                                           
+                                           )  
+              self.multi_stop_connections.sort(
+                   key=lambda c:(c[0].first_class_price+c[1].first_class_price
+                                 if class_type=="first"
+                                 else c[0].second_class_price+c[1].second_class_price) #multi-stop connections PRICE
+              ) 
 
-    def sortDurationMultiStop(self):
-         sort_key=lambda both_connections: (
-              self.duration(both_connections[0].departure_time,both_connections[0].arrival_time,both_connections[0].plus_one_day)+
-              self.duration(both_connections[1].departure_time,both_connections[1].arrival_time,both_connections[1].plus_one_day)
-        )
-         self.multi_stop_connections.sort(key=sort_key)     
+         elif by=="duration":      
+               self.direct_connections.sort(
+                    key=lambda c: self.duration(c.departure_time,c.arrival_time,c.plus_one_day) #direct connections DURATION
+               )
+               
+               self.multi_stop_connections.sort(
+                    key=lambda c: (self.duration(c[0].departure_time,c[0].arrival_time,c[0].plus_one_day)+self.duration(c[1].departure_time,c[1].arrival_time,c[1].plus_one_day)) #multi-stop connections DURATION
+               )
+
+    def sortingChoice(self,search):
+        connection_options=len(self.direct_connections)+len(self.multi_stop_connections)
+        if connection_options==0:
+               print("\nThere isn't any connection that matches the criteria you provided.")
+               return
+
+        if connection_options>1:
+               print("\nThere are multiple connection options for your criteria. Which sort option do you want?")
+               print("1. Sort by Price")
+               print("2. Sort by Duration")
+               choice=input("Enter 1 or 2: ").strip()
+
+               if choice=="1":
+                    if search.first_class_price!=0.0:
+                         sorting_class="first"
+                    elif search.second_class_price!=0.0:
+                         sorting_class="second"
+                    else:
+                         sorting_class="first"
+
+                    self.sorting(by="price",class_type=sorting_class)
+               elif choice=="2":
+                    self.sorting(by="duration")           
+               else:
+                    print("Invalid sort option.")
+   
+        else:
+               
+            print("\nOnly one connection option found, no sorting needed.")        
+
+        self.printConnections()           
             
             
