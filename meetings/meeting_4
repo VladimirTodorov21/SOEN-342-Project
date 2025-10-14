@@ -1,0 +1,21 @@
+=============================
+|         Meeting 4         |
+=============================
+
+Date Present: 14 October 2025
+Time Spent: 3:00 PM - 4:30 PM
+
+Members Present:
+- Vladimir
+- Mohamad
+- Richard Joseph
+
+Structure:
+- Planning and Distribution of tasks
+- - Update UML Class Diagram, Update UML State Diagram (both done during meeting, not yet pushed onto github as of writing the document)
+- - Update Use Case Diagram
+- - Update System Sequence Diagram
+- - Update System Operations
+- - Add 2 new contracts and the respective interaction diagrams for the use cases in iteration2
+- - Update the UML Class Diagram
+- - Implement the source code for the new classes
