@@ -13,6 +13,50 @@ class ConnectionFinder:
        self.connection_catalog=catalog
        self.direct_connections=[]
        self.multi_stop_connections=[]
+       self.connectionChoice:List[Connection]=[]
+
+    def setConnectionChoice(self):
+          connectionTypeChoice = ""
+          while True:
+               connectionTypeChoice = input("Choose your connection ('d' for direct connection or 'm' for multistop connection): ")
+               if connectionTypeChoice == "d" or connectionTypeChoice == "m":
+                    break
+               print("Please try again by giving the correct input!")
+          
+          if connectionTypeChoice == "d":
+               if len(self.direct_connections) != 0:
+                    directConnectionChoice = ""
+                    while True:
+                         directConnectionChoice = input("Choose a direct connection by typing an integer: ")
+                         if int(directConnectionChoice) <= len(self.direct_connections) and int(directConnectionChoice) > 0:
+                              break
+                         print("Please try again by giving the correct input!")
+
+                    self.connectionChoice = self.direct_connections[int(directConnectionChoice)-1]
+                    print(f"\nYou have chosen direct connection {directConnectionChoice}\n")
+               else:
+                    print("There are no direct connections to choose from")
+
+          if connectionTypeChoice == "m":
+               if len(self.multi_stop_connections) != 0:
+                    multistopConnectionChoice = ""
+                    while True:
+                         multistopConnectionChoice = input("Choose a multistop connection by typing an integer: ")
+                         if int(multistopConnectionChoice) <= len(self.multi_stop_connections) and int(multistopConnectionChoice) > 0:
+                              break
+                         print("Please try again by giving the correct input!")
+
+                    self.connectionChoice = self.multi_stop_connections[int(multistopConnectionChoice)-1]
+                    print(f"\nYou have chosen multi-stop connection {multistopConnectionChoice}\n")
+               else:
+                    print("There are no multi-stop connections to choose from")
+
+    def getConnectionChoice(self):
+        return self.connectionChoice
+    
+    def clearConnectionChoice(self):
+        self.connectionChoice.clear()
+
 
     def getMultiStopConnections(self):
         for connection_1 in self.connection_catalog.connection_catalog:
@@ -83,8 +127,7 @@ class ConnectionFinder:
                  print(f"| {'Second Class Price:':<20}| {connection.second_class_price}")
                  connection_duration=self.duration(connection.departure_time,connection.arrival_time,getattr(connection,'plus_one_day',False))
                  print(f"| {'Total Connection Duration:':<20}| {connection_duration}")  
-                 print("----------------------------------------\n")
-             
+                 print("----------------------------------------\n") 
 
         if (self.multi_stop_connections): 
             print("\n----------Multiple Connections------------")

@@ -49,3 +49,9 @@ class Connection:
 
             self.days_of_operation=[]
             self.convertDaysOperation(daysOperation)
+        
+        def getDepartureCity(self):
+            return self.departure_city
+        
+        def getArrivalCity(self):
+            return self.arrival_city
