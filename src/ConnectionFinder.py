@@ -83,33 +83,51 @@ class ConnectionFinder:
         
                     
 
-    def findConnections(self):
+    def findConnections(self, criteria):
         self.direct_connections=[]
         self.multi_stop_connections=[]
 
         # checking each attribute of a connection if it matches with search_criteria's attributes for direct connections
         for connection in self.connection_catalog.connection_catalog:
-            if (connection.departure_city!=self.search_criteria.departure_city):
+            if (connection.departure_city.strip().lower()!=self.search_criteria.departure_city.strip().lower()):
                 continue
-            if (connection.arrival_city!=self.search_criteria.arrival_city):
+            if (connection.arrival_city.strip().lower()!=self.search_criteria.arrival_city.strip().lower()):
                 continue
-            if (self.search_criteria.departure_time!="N/A")and (connection.departure_time!=self.search_criteria.departure_time):
+            if (criteria.departure_time!="N/A")and (connection.departure_time!=criteria.departure_time):
                     continue
-            if (self.search_criteria.arrival_time!="N/A")and (connection.arrival_time!=self.search_criteria.arrival_time):
+            if (criteria.arrival_time!="N/A")and (connection.arrival_time!=criteria.arrival_time):
                     continue
-            if (self.search_criteria.train_type!="N/A") and (connection.train_type!=self.search_criteria.train_type):
+            if (criteria.train_type!="N/A") and (connection.train_type.strip().lower()!=criteria.train_type.strip().lower()):
                     continue
-            if (self.search_criteria.first_class_price!=0.0) and (connection.first_class_price!=self.search_criteria.first_class_price):
+            if (criteria.first_class_price>0.0) and (connection.first_class_price>criteria.first_class_price):
                     continue
-            if (self.search_criteria.second_class_price!=0.0) and (connection.second_class_price!=self.search_criteria.second_class_price):
+            if (criteria.second_class_price>0.0) and (connection.second_class_price>criteria.second_class_price):
                     continue
-            if ( self.search_criteria.days_of_operation) and (connection.days_of_operation!=self.search_criteria.days_of_operation):
+            
+            dayRoute = self.parseDay(connection.days_of_operation)
+            if (criteria.days_of_operation) and not any(day in dayRoute for day in criteria.days_of_operation):
                    continue
             
             self.direct_connections.append(connection)
         
         self.getMultiStopConnections()
-            
+
+    def parseDay(self, days_str):
+          days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+
+          if isinstance(days_str,list):
+               return [d.strip() for d in days_str]
+
+          if days_str=="Daily":
+               return days
+          elif "-" in days_str:
+             first_index=days.index(start)
+             second_index=days.index(end)
+             start,end = [d.strip() for d in days_str.split("-")]
+
+             return days[first_index:second_index+1] if first_index<=second_index else days[first_index:]+days[:second_index+1]
+          else:
+             return [d.strip() for d in days_str.split(",")]
 
     def printConnections(self):
         if (self.direct_connections):
