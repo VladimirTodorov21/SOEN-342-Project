@@ -62,7 +62,7 @@ class Main:
                         search.collect_user_input()
                         search.display_user_input()
 
-                        connectionFinder.findConnections()
+                        connectionFinder.findConnections(search)
                         connectionFinder.printConnections()
                         connectionFinder.sortingChoice(search)
                         connectionFinder.setConnectionChoice()
