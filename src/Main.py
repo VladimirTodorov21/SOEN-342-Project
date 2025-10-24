@@ -6,7 +6,7 @@ from catalogs.TravelerCatalog import TravelerCatalog
 from catalogs.TripCatalog import TripCatalog
 import csv
 import os
-from ViewTrip import ViewTrip
+
 
 class Main:    
 
@@ -14,7 +14,7 @@ class Main:
         self.travelerCatalog = TravelerCatalog()
         self.ticketRecord = TicketRecords()
         self.tripCatalog = TripCatalog()
-        self.viewTrip=ViewTrip(self.tripCatalog)
+        
   
     def bookTrip(self,numTravelers, connectionChoice): #add Connection(s) here     
           trip=self.tripCatalog.makeTrip()
@@ -101,7 +101,7 @@ class Main:
                         lname=input("Enter traveler's last name: ").strip()
                         traveler_id=input("Enter traveler's ID:").strip()
 
-                        self.viewTrip.viewTrips(lname,traveler_id)
+                        self.tripCatalog.viewTrips(lname,traveler_id)
 
                         input("Press 'Enter' to go back to the menu: ")
 
