@@ -7,12 +7,14 @@ from catalogs.TripCatalog import TripCatalog
 import csv
 import os
 
+
 class Main:    
 
     def __init__(self):
         self.travelerCatalog = TravelerCatalog()
         self.ticketRecord = TicketRecords()
         self.tripCatalog = TripCatalog()
+        
   
     def bookTrip(self,numTravelers, connectionChoice): #add Connection(s) here     
           trip=self.tripCatalog.makeTrip()
@@ -27,6 +29,7 @@ class Main:
             print(f"\nReservation Created for {traveler.getFName()} {traveler.getLName()} with ID: {traveler.getID()}\n")
             reservation=traveler.getReservation()
             ticket=self.ticketRecord.makeTicket(reservation)
+            reservation.setTicket(ticket)
             print(f"Ticket created with unique ID {ticket.getID()}\n")
             trip.addReservation(reservation)
             
@@ -95,12 +98,15 @@ class Main:
 
                     case "3": # Viewing the trips
                         
-                        # ********************************
-                        # Implement View Trips Method here
-                        # ********************************
+                        lname=input("Enter traveler's last name: ").strip()
+                        traveler_id=input("Enter traveler's ID:").strip()
+
+                        self.tripCatalog.viewTrips(lname,traveler_id)
+
+                        input("Press 'Enter' to go back to the menu: ")
 
                         menuProceed = False
-                        menu_on = False
+                        break
 
                     case "4": # Exiting the System
                         print("\nThank you for using the Railway Network System, Goodbye!")
