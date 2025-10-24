@@ -5,7 +5,7 @@ class Trip:
     
     
     def __init__(self,id):
-        self.id=id
+        self.trip_id=id
         self.reservations: List[Reservation.Reservation]=[]
     
     def setID(self,id):
