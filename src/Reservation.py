@@ -5,7 +5,7 @@ class Reservation:
     traveler: Traveler
     ticket: Ticket
     def __init__(self,traveler):
-        self.setTraveler(traveler)
+        self.traveler = traveler
     
     def setTraveler(self,traveler):
         self.traveler=traveler

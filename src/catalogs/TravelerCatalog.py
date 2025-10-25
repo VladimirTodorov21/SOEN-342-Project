@@ -7,13 +7,13 @@ class TravelerCatalog:
     
 
     def makeTraveler(self,traveler_id:str,traveler_fname:str,traveler_lname:str,traveler_age:str):
-        t=Traveler(traveler_id,traveler_fname,traveler_lname,traveler_age)
         
         for traveler in self.travelers:
-            if traveler == t:
-                t.createReservation()
+            if traveler.getFName().lower() == traveler_fname and traveler.getLName().lower() == traveler_lname and traveler.getAge().lower() == traveler_age:
+                traveler.createReservation()
                 return traveler
-        
+            
+        t=Traveler(traveler_id,traveler_fname,traveler_lname,traveler_age)
         self.add(t)
         t.createReservation()
         return t

@@ -34,10 +34,6 @@ class Main:
             reservation[len(reservation)-1].setTicket(ticket)
             print(f"Ticket created with unique ID {ticket.getID()}\n")
             trip.addReservation(reservation[len(reservation)-1])
-
-            for reservation in traveler.getReservation():
-                print(reservation.getTicket().getID())
-            print(len(reservation))
         
           self.tripCatalog.addTrip(trip)
           if isinstance(connectionChoice, tuple):
@@ -90,7 +86,6 @@ class Main:
             print("\n No past trips have been found. Ending view trips.")
 
     def printTrip(self,trip,reservation):
-            # ticket=self.travelerCatalog.getTravelers()[0].getReservation()[0].getTicket()
             ticket=reservation.getTicket()
             traveler=reservation.getTraveler()
             connection=trip.getConnection()
@@ -120,7 +115,7 @@ class Main:
           menu_on = True
 
           while(menu_on == True):
-              #os.system('cls') # clears terminal screen
+              os.system('cls') # clears terminal screen
 
               print("-----------------------------------------\n| Welcome to the Railway Network System |\n-----------------------------------------")
               print("| 1. Search for Railway Connections\n| 2. Book Trip(s)\n| 3. View Trip(s)\n| 4. Exit\n-----------------------------------------\n")
@@ -172,9 +167,6 @@ class Main:
                         traveler_id=input("Enter traveler's ID:").strip()
 
                         self.viewTrips(lname,traveler_id)
-
-                        for ticket in self.ticketRecord.getTickets():
-                            print(ticket.getID())
 
                         input("Press 'Enter' to go back to the menu: ")
 

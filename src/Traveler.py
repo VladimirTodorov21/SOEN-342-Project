@@ -5,13 +5,13 @@ class Traveler:
     traveler_f_name:str
     traveler_l_name:str
     traveler_age:str
-    reservation:List[Reservation.Reservation]=[]
     def __init__(self,id:str,fname:str,lname:str,age:str):
         self.traveler_id=id
         self.traveler_f_name=fname
         self.traveler_l_name=lname
         self.traveler_age=age
-    
+        self.reservation:List[Reservation.Reservation]=[]
+
     def setID(self,id):
         self.traveler_id=id
         
@@ -39,9 +39,3 @@ class Traveler:
     def createReservation(self):
         reservation = Reservation.Reservation(self)
         self.reservation.append(reservation)
-
-    def __eq__(self, otherTraveler):
-        if isinstance(otherTraveler, Traveler):
-            return self.getFName().lower() == otherTraveler.getFName().lower() and self.getLName().lower() == otherTraveler.getLName().lower() and self.getAge().lower() == otherTraveler.getAge()
-        return False
-        

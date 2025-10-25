@@ -1,1 +1,2 @@
-from catalogs.TicketRecords import TicketRecords
+
+        self.travelerCatalog = TravelerCatalog()
