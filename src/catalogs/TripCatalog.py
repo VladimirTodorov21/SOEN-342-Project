@@ -6,15 +6,13 @@ class TripCatalog:
     
     def __init__(self):
         self.trips:List[Trip]=[]
-        self.tripConnection=[]
         
     def makeTrip(self):
         trip=Trip("A"+str((len(self.trips)+1))) #creating a new trip with id = length of trips + 1
         return trip
         
-    def addTrip(self,trip,connectionChoice):
+    def addTrip(self,trip):
         self.trips.append(trip)
-        self.tripConnection.append(connectionChoice)
     
     def getTrips(self):
         return self.trips
@@ -64,9 +62,19 @@ class TripCatalog:
     def printTrip(self,trip,reservation):
             ticket=reservation.getTicket()
             traveler=reservation.getTraveler()
+            connection=trip.getConnection()
+
+            if isinstance(connection, list) and len(connection) == 1:
+                connection_type = connection[0]
+
+                if isinstance(connection_type, tuple) and len(connection_type) == 2:
+                    connection = "Multi-Stop Connection from " + connection_type[0].getDepartureCity() + " to " + connection_type[1].getArrivalCity()
+                else:
+                    connection = "Direct Connection from " + connection_type.getDepartureCity() + " to " + connection_type.getArrivalCity()
 
             print(f"Trip ID: {trip.getID()}")
             print(f"Ticket ID: {ticket.getID()}") 
-            print(f"Traveler: {traveler.getFName()} {traveler.getLName()} (Age: {traveler.getAge()})") 
+            print(f"Traveler: {traveler.getFName()} {traveler.getLName()} (Age: {traveler.getAge()})")
+            print(connection)
             print("-------------------------------")  
         
