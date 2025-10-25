@@ -11,10 +11,7 @@ class Trip:
         self.trip_id=id
         self.reservations: List[Reservation.Reservation]=[]
         self.connection: List[Connection.Connection]=[]
-<<<<<<< HEAD
-=======
         self.departure_day=departure_day if departure_day else datetime.today() 
->>>>>>> origin/main
     
     def setID(self,id):
         self.trip_id=id

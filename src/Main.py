@@ -34,11 +34,8 @@ class Main:
             reservation.setTicket(ticket)
             print(f"Ticket created with unique ID {ticket.getID()}\n")
             trip.addReservation(reservation)
-<<<<<<< HEAD
           
-=======
             
->>>>>>> origin/main
           self.tripCatalog.addTrip(trip)
           if isinstance(connectionChoice, tuple):
             connection_1, connection_2 = connectionChoice
