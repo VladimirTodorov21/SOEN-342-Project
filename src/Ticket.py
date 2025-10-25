@@ -1,4 +1,8 @@
-import Reservation
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from Reservation import Reservation
+
 class Ticket:
     ticket_id:str
     reservation:Reservation

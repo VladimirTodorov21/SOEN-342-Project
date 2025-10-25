@@ -1,1 +1,1 @@
-print(ticket.getID())
+from catalogs.TicketRecords import TicketRecords

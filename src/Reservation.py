@@ -1,5 +1,6 @@
+from Ticket import Ticket
 import Traveler
-import Ticket
+
 class Reservation:
     traveler: Traveler
     ticket: Ticket
@@ -15,5 +16,5 @@ class Reservation:
     def getTraveler(self):
         return self.traveler
     
-    def getTicket(self):
+    def getTicket(self) -> Ticket: 
         return self.ticket

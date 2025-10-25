@@ -29,18 +29,87 @@ class Main:
             traveler=self.travelerCatalog.makeTraveler(id,fname,lname,age)
             print(f"\nReservation Created for {traveler.getFName()} {traveler.getLName()} with Traveler ID: {traveler.getID()}\n")
             reservation=traveler.getReservation()
-            ticket=self.ticketRecord.makeTicket(reservation)
-            reservation.setTicket(ticket)
+
+            ticket=self.ticketRecord.makeTicket(reservation[len(reservation)-1])
+            reservation[len(reservation)-1].setTicket(ticket)
             print(f"Ticket created with unique ID {ticket.getID()}\n")
-            trip.addReservation(reservation)
-            
+            trip.addReservation(reservation[len(reservation)-1])
+
+            for reservation in traveler.getReservation():
+                print(reservation.getTicket().getID())
+            print(len(reservation))
+        
           self.tripCatalog.addTrip(trip)
           if isinstance(connectionChoice, tuple):
             connection_1, connection_2 = connectionChoice
             print(f"Multi-stop Trip from {connection_1.getDepartureCity()} to {connection_2.getArrivalCity()} has been booked for {numTravelers} travelers!\n")
           else:
             print(f"Direct Trip from {connectionChoice.getDepartureCity()} to {connectionChoice.getArrivalCity()} has been booked for {numTravelers} travelers!\n")
-            
+
+    def viewTrips(self,lname:str,traveler_id:str):
+        trip_found= []
+        for trip in self.tripCatalog.getTrips(): 
+            for reservation in trip.getReservations():
+                traveler = reservation.getTraveler()
+
+                if (traveler.getLName().lower()==lname.lower()) and (str(traveler.getID())==traveler_id):
+                    trip_found.append((trip,reservation))
+
+        if not(trip_found): 
+            print("\nNo trips were found linked to this traveler \n")
+            return
+                
+        present_trip=[]
+        past_trip=[]
+        today=datetime.today()
+
+        for (trip,reservation) in trip_found: 
+
+            dep_day=trip.getDepartureDay()
+
+            if dep_day.date()< today.date():
+                past_trip.append((trip,reservation))
+            elif dep_day.date()==today.date():
+                present_trip.append((trip,reservation))
+
+        print(f"\n--- The trips that were found for {lname} with ID: {traveler_id} ---\n")
+
+        #current trips
+        if present_trip:
+            print("Current Trips:\n")
+            for trip,reservation in present_trip:
+                self.printTrip(trip,reservation)
+
+        #past trips
+        if past_trip:
+            print("Trip History:\n")
+            for trip,reservation in past_trip:
+                self.printTrip(trip,reservation)  
+
+        if not(past_trip): 
+            print("\n No past trips have been found. Ending view trips.")
+
+    def printTrip(self,trip,reservation):
+            # ticket=self.travelerCatalog.getTravelers()[0].getReservation()[0].getTicket()
+            ticket=reservation.getTicket()
+            traveler=reservation.getTraveler()
+            connection=trip.getConnection()
+
+            if isinstance(connection, list) and len(connection) == 1:
+                connection_type = connection[0]
+
+                if isinstance(connection_type, tuple) and len(connection_type) == 2:
+                    connection = "Multi-Stop Connection from " + connection_type[0].getDepartureCity() + " to " + connection_type[1].getArrivalCity()
+                else:
+                    connection = "Direct Connection from " + connection_type.getDepartureCity() + " to " + connection_type.getArrivalCity()
+
+            print(f"Trip ID: {trip.getID()}")
+            print(f"Ticket ID: {ticket.getID()}") 
+            print(f"Traveler: {traveler.getFName()} {traveler.getLName()} (Age: {traveler.getAge()})")
+            print(connection)
+            print("-------------------------------")
+
+
     def run(self):
           search = SearchCriteria()
           catalog=ConnectionCatalog()
@@ -102,7 +171,7 @@ class Main:
                         lname=input("Enter traveler's last name: ").strip()
                         traveler_id=input("Enter traveler's ID:").strip()
 
-                        self.tripCatalog.viewTrips(lname,traveler_id)
+                        self.viewTrips(lname,traveler_id)
 
                         for ticket in self.ticketRecord.getTickets():
                             print(ticket.getID())
