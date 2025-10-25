@@ -27,7 +27,7 @@ class Main:
             id=len(self.travelerCatalog.getTravelers())+1
             
             traveler=self.travelerCatalog.makeTraveler(id,fname,lname,age)
-            print(f"\nReservation Created for {traveler.getFName()} {traveler.getLName()} with ID: {traveler.getID()}\n")
+            print(f"\nReservation Created for {traveler.getFName()} {traveler.getLName()} with Traveler ID: {traveler.getID()}\n")
             reservation=traveler.getReservation()
             ticket=self.ticketRecord.makeTicket(reservation)
             reservation.setTicket(ticket)
@@ -51,7 +51,7 @@ class Main:
           menu_on = True
 
           while(menu_on == True):
-              os.system('cls') # clears terminal screen
+              #os.system('cls') # clears terminal screen
 
               print("-----------------------------------------\n| Welcome to the Railway Network System |\n-----------------------------------------")
               print("| 1. Search for Railway Connections\n| 2. Book Trip(s)\n| 3. View Trip(s)\n| 4. Exit\n-----------------------------------------\n")
@@ -103,6 +103,9 @@ class Main:
                         traveler_id=input("Enter traveler's ID:").strip()
 
                         self.tripCatalog.viewTrips(lname,traveler_id)
+
+                        for ticket in self.ticketRecord.getTickets():
+                            print(ticket.getID())
 
                         input("Press 'Enter' to go back to the menu: ")
 

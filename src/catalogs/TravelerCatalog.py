@@ -8,6 +8,12 @@ class TravelerCatalog:
 
     def makeTraveler(self,traveler_id:str,traveler_fname:str,traveler_lname:str,traveler_age:str):
         t=Traveler(traveler_id,traveler_fname,traveler_lname,traveler_age)
+        
+        for traveler in self.travelers:
+            if traveler == t:
+                t.createReservation()
+                return traveler
+        
         self.add(t)
         t.createReservation()
         return t

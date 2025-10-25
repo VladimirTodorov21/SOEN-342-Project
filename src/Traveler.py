@@ -37,4 +37,9 @@ class Traveler:
 
     def createReservation(self):
         self.reservation=Reservation.Reservation(self)
+
+    def __eq__(self, otherTraveler):
+        if isinstance(otherTraveler, Traveler):
+            return self.getFName().lower() == otherTraveler.getFName().lower() and self.getLName().lower() == otherTraveler.getLName().lower() and self.getAge().lower() == otherTraveler.getAge()
+        return False
         
