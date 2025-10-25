@@ -20,6 +20,7 @@ class Main:
           trip=self.tripCatalog.makeTrip()
           trip.addConnection(connectionChoice)
           print(f"\n---Booking a trip for {numTravelers} travelers---\n")
+
           for i in range(int(numTravelers)):
             fname=input("Input Traveler First Name: ").strip()
             lname=input("Input Traveler Last Name: ").strip()
@@ -33,6 +34,7 @@ class Main:
             reservation.setTicket(ticket)
             print(f"Ticket created with unique ID {ticket.getID()}\n")
             trip.addReservation(reservation)
+          
             
           self.tripCatalog.addTrip(trip)
           if isinstance(connectionChoice, tuple):
