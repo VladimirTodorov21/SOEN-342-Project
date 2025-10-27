@@ -1,10 +1,11 @@
+from Ticket import Ticket
 import Traveler
-import Ticket
+
 class Reservation:
     traveler: Traveler
     ticket: Ticket
     def __init__(self,traveler):
-        self.setTraveler(traveler)
+        self.traveler = traveler
     
     def setTraveler(self,traveler):
         self.traveler=traveler
@@ -15,5 +16,5 @@ class Reservation:
     def getTraveler(self):
         return self.traveler
     
-    def getTicket(self):
+    def getTicket(self) -> Ticket: 
         return self.ticket
