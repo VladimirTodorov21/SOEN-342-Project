@@ -1,0 +1,18 @@
+=============================
+|         Meeting 5         |
+=============================
+
+Date Present: 27 October 2025
+Time Spent: 2:00 PM - 2:40 PM
+
+Members Present:
+- Vladimir
+- Mohamad
+- Richard Joseph
+
+Structure:
+- Planning and Distribution of tasks
+- - Create ERD Diagram for Book a Trip Use Case
+- - Setup Database Tables with SqlLite
+- - Refactor bookTrips and viewTrips methods in Main.py to incorporate database connection between Python and SQL
+- - Add 1 policy of our choice for this iteration
