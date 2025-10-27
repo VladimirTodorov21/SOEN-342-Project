@@ -20,6 +20,7 @@ class Main:
           trip=self.tripCatalog.makeTrip()
           trip.addConnection(connectionChoice)
           print(f"\n---Booking a trip for {numTravelers} travelers---\n")
+
           for i in range(int(numTravelers)):
             fname=input("Input Traveler First Name: ").strip()
             lname=input("Input Traveler Last Name: ").strip()
