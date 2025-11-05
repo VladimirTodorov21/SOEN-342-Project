@@ -25,7 +25,7 @@ class TravelerGateway:
                 travelerLName,
                 travelerAge
             ) VALUES (
-                :travler_id,
+                :traveler_id,
                 :traveler_fname,
                 :traveler_lname,
                 :traveler_age
@@ -56,6 +56,7 @@ class TravelerGateway:
                          UPDATE trip
                          SET status= 'Completed'
                          WHERE tripId = ?
+                           AND status= 'Present'
                          """,id)
         
         self.conn.commit()

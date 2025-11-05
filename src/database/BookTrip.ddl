@@ -13,18 +13,19 @@ CREATE TABLE soen342project.connection (
 CREATE TABLE soen342project.trip (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     trip_code TEXT GENERATED ALWAYS AS ('A' || id) VIRTUAL,
-    routeId INT NOT NULL,
-    routeId2 INT,
     status VARCHAR (50),
-    FOREIGN KEY (reservationId) REFERENCES reservation (id),
-    FOREIGN KEY (routeId) REFERENCES connection (route_id),
-    FOREIGN KEY (routeId2) REFERENCES connection (route_id)
+    directConnectionID INT NOT NULL,
+    multiStopConnectionID INT,
+    FOREIGN KEY (directConnectionID) REFERENCES connection (route_id),
+    FOREIGN KEY (multiStopConnectionID) REFERENCES connection (route_id)
 );
 
 CREATE TABLE soen342project.reservation (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     travelerId INTEGER,
     ticketId INTEGER,
+    tripID INTEGER,
+    FOREIGN KEY (tripID) REFERENCES trip (tripId)
     FOREIGN KEY (travelerId) REFERENCES traveler (travelerId),
     FOREIGN KEY (ticketId) REFERENCES ticket (id)
 );
