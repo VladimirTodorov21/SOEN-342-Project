@@ -32,6 +32,7 @@ CREATE TABLE soen342project.reservation (
 
 CREATE TABLE soen342project.traveler (
     travelerId INTEGER PRIMARY KEY ,
+    travelerFName TEXT,
     travelerLName VARCHAR(50) NOT NULL,
     travelerAge VARCHAR(50) NOT NULL,
     FOREIGN KEY (reservationId) REFERENCES reservation (id)
@@ -40,7 +41,7 @@ CREATE TABLE soen342project.traveler (
 CREATE TABLE soen342project.ticket (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     reservationId INTEGER,
-    FOREIGN KEY (reservationId) REFERENCES reservation (ID)
+    FOREIGN KEY (reservationId) REFERENCES reservation (id)
 );
 
 CREATE TABLE soen342project.trip_catalog (
