@@ -2,17 +2,16 @@ import Reservation
 import Connection
 from typing import List
 from datetime import datetime
-
+from gateways.TripGateway import TripGateway
 class Trip:
     trip_id:str #alphanumberic AX
+    status:str
     
-    
-    def __init__(self,id:str,departure_day: datetime=None):
-        self.trip_id=id
+    def __init__(self,trip_status:str,departure_day: datetime=None):
         self.reservations: List[Reservation.Reservation]=[]
         self.connection: List[Connection.Connection]=[]
         self.departure_day=departure_day if departure_day else datetime.today() 
-    
+        self.status=trip_status
     def setID(self,id):
         self.trip_id=id
         
@@ -21,6 +20,15 @@ class Trip:
     
     def addConnection(self,connectionChoice):
         self.connection.append(connectionChoice)
+        isMultiStop= len (connectionChoice)
+        trip_gateway= TripGateway()
+        directID= (connectionChoice[0].route_ID)
+        multiID=""
+        if (isMultiStop>1):
+            multiID= connectionChoice[1].route_ID
+        tripID=trip_gateway.insertTrip(self.status,directID,multiID)
+        self.setID("A"+str(tripID))
+        trip_gateway.closeConnection()
         
     def getID(self):
         return self.trip_id
@@ -36,3 +44,6 @@ class Trip:
 
     def getDepartureDay(self):
         return self.departure_day    
+    
+    def getStatus(self):
+        return self.status

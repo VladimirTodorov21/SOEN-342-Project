@@ -37,5 +37,5 @@ class ConnectionCatalog:
                  stub=Connection(**data)
                  self.connection_catalog.append(stub)
                  if (connectionGate.hasConnectionTable==False):
-                    connectionGate.addConnection(data)
+                    connectionGate.insertConnection(data)
         connectionGate.closeConnection()

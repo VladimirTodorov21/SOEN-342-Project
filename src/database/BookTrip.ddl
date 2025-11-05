@@ -12,7 +12,7 @@ CREATE TABLE soen342project.connection (
 
 CREATE TABLE soen342project.trip (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    reservationId INTEGER,
+    trip_code TEXT GENERATED ALWAYS AS ('A' || id) VIRTUAL,
     routeId INT NOT NULL,
     routeId2 INT,
     status VARCHAR (50),
@@ -30,9 +30,8 @@ CREATE TABLE soen342project.reservation (
 );
 
 CREATE TABLE soen342project.traveler (
-    travelerId INTEGER PRIMARY KEY AUTOINCREMENT,
-    reservationId INTEGER,
-    travelerName VARCHAR(50) NOT NULL,
+    travelerId INTEGER PRIMARY KEY ,
+    travelerLName VARCHAR(50) NOT NULL,
     travelerAge VARCHAR(50) NOT NULL,
     FOREIGN KEY (reservationId) REFERENCES reservation (id)
 );

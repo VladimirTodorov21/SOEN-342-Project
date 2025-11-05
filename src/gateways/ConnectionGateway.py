@@ -20,7 +20,7 @@ class ConnectionGateway:
     def deleteTable(self):
         self.cur.execute("DELETE FROM connection")
     
-    def addConnection(self, connectionObj: dict):
+    def insertConnection(self, connectionObj: dict):
         
         row = {
             "route_id":           connectionObj["routeID"],

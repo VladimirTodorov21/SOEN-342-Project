@@ -16,8 +16,10 @@ class Main:
         self.tripCatalog = TripCatalog()
         
   
-    def bookTrip(self,numTravelers, connectionChoice): #add Connection(s) here     
-          trip=self.tripCatalog.makeTrip()
+    def bookTrip(self,numTravelers, connectionChoice,tripStatus): #add Connection(s) here     
+          trip=self.tripCatalog.makeTrip(tripStatus)
+        
+         #insert trip into DB and setting trip ID here
           trip.addConnection(connectionChoice)
           print(f"\n---Booking a trip for {numTravelers} travelers---\n")
 
@@ -25,17 +27,24 @@ class Main:
             fname=input("Input Traveler First Name: ").strip()
             lname=input("Input Traveler Last Name: ").strip()
             age=input("Input Traveler age: ").strip()
-            id=len(self.travelerCatalog.getTravelers())+1
+            travelerID=input("Input Traveler ID:").strip()
             
-            traveler=self.travelerCatalog.makeTraveler(id,fname,lname,age)
+            #inserting traveler into DB
+            traveler=self.travelerCatalog.makeTraveler(travelerID,fname,lname,age)
             print(f"\nReservation Created for {traveler.getFName()} {traveler.getLName()} with Traveler ID: {traveler.getID()}\n")
             reservation=traveler.getReservation()
 
+            #creating a new ticketID here
             ticket=self.ticketRecord.makeTicket(reservation[len(reservation)-1])
-            reservation[len(reservation)-1].setTicket(ticket)
+            
+            #inserting resrevation into DB
+            reservation[len(reservation)-1].setTicket(ticket,trip.getID())
             print(f"Ticket created with unique ID {ticket.getID()}\n")
+            #inserting reservation id into ticket
+            ticket.insertReservationDB()
+            
             trip.addReservation(reservation[len(reservation)-1])
-        
+            
           self.tripCatalog.addTrip(trip)
           if isinstance(connectionChoice, tuple):
             connection_1, connection_2 = connectionChoice
@@ -112,7 +121,7 @@ class Main:
           connectionFinder= ConnectionFinder(search,catalog)
 
           # connectionFinder.clearConnectionChoice()
-
+        
           menu_on = True
 
           while(menu_on == True):
@@ -154,9 +163,23 @@ class Main:
                               print(f"\nPreviously Chosen Multi-stop Trip from {connection_1.getDepartureCity()} to {connection_2.getArrivalCity()}\n")
                             else:
                               print(f"\nPreviously Chosen Direct Trip from {connectionFinder.getConnectionChoice().getDepartureCity()} to {connectionFinder.getConnectionChoice().getArrivalCity()}\n")
-
+                            print("Are you planning a trip or starting it now?")
+                            print("1. Going now")
+                            print("2. Planning a future trip")
+                            status={
+                                "1":"Present",
+                                "2":"Future",
+                            }
+                            travel_status=""
+                            while True:
+                                choice= input ("Input Choice :").strip()
+                                if choice in status:
+                                    travel_status=status[choice]
+                                    break
+                                else:
+                                    print("Invalid Option, try again")
                             numTravelers=input ("How many travelers are you?: ").strip()
-                            self.bookTrip(numTravelers, connectionFinder.getConnectionChoice())
+                            self.bookTrip(numTravelers, connectionFinder.getConnectionChoice(),travel_status)
                         
                         input("Press 'Enter' to go back to menu: ")
                         menuProceed == False
