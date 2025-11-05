@@ -2,7 +2,7 @@ from typing import List
 from Trip import *
 from catalogs.TicketRecords import TicketRecords
 from datetime import datetime
-
+from gateways.TicketGateway import TicketGateway
 class TripCatalog:
     
     def __init__(self):
@@ -14,6 +14,8 @@ class TripCatalog:
         
     def addTrip(self,trip):
         self.trips.append(trip)
+        #passing trip information into db
+        
     
     def getTrips(self):
         return self.trips

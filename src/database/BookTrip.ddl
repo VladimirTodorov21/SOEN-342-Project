@@ -1,6 +1,7 @@
 CREATE TABLE soen342project.connection (
     route_id INT PRIMARY KEY,
     departure_city VARCHAR(50) NOT NULL,
+    arrival_city VARCHAR(50) NOT NULL,
     departure_time VARCHAR(50) NOT NULL,
     arrival_time VARCHAR(50) NOT NULL,
     train_type VARCHAR(50) NOT NULL,
@@ -12,10 +13,12 @@ CREATE TABLE soen342project.connection (
 CREATE TABLE soen342project.trip (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     reservationId INTEGER,
-    routeId INT,
+    routeId INT NOT NULL,
+    routeId2 INT,
     status VARCHAR (50),
     FOREIGN KEY (reservationId) REFERENCES reservation (id),
-    FOREIGN KEY (routeId) REFERENCES connection (route_id)
+    FOREIGN KEY (routeId) REFERENCES connection (route_id),
+    FOREIGN KEY (routeId2) REFERENCES connection (route_id)
 );
 
 CREATE TABLE soen342project.reservation (

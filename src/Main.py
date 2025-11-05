@@ -116,7 +116,7 @@ class Main:
           menu_on = True
 
           while(menu_on == True):
-              os.system('cls') # clears terminal screen
+              #os.system('cls') # clears terminal screen
 
               print("-----------------------------------------\n| Welcome to the Railway Network System |\n-----------------------------------------")
               print("| 1. Search for Railway Connections\n| 2. Book Trip(s)\n| 3. View Trip(s)\n| 4. Exit\n-----------------------------------------\n")
