@@ -43,4 +43,22 @@ class TravelerGateway:
         #print ("User exists")
         
         return self.cur.fetchone()
+    
+    def setPastTrips(self,travelerID):
+        self.cur.execute("""
+                         SELECT tripID FROM reservation WHERE travelerId = ?
+                         """,(travelerID,))
         
+        tripIDs=self.cur.fetchall()
+      
+        for id in tripIDs:
+            self.cur.execute("""
+                         UPDATE trip
+                         SET status= 'Completed'
+                         WHERE tripId = ?
+                         """,id)
+        
+        self.conn.commit()
+        
+    def closeConnection(self):
+        self.conn.close()

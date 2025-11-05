@@ -29,12 +29,12 @@ class Main:
             age=input("Input Traveler age: ").strip()
             travelerID=input("Input Traveler ID:").strip()
             
-            #inserting traveler into DB
+            #inserting traveler into DB or checking if they already exist through id
             traveler=self.travelerCatalog.makeTraveler(travelerID,fname,lname,age)
             print(f"\nReservation Created for {traveler.getFName()} {traveler.getLName()} with Traveler ID: {traveler.getID()}\n")
             reservation=traveler.getReservation()
 
-            #creating a new ticketID here
+            #creating a new ticketID here and
             ticket=self.ticketRecord.makeTicket(reservation[len(reservation)-1])
             
             #inserting resrevation into DB

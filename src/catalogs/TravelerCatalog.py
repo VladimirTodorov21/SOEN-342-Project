@@ -14,6 +14,7 @@ class TravelerCatalog:
         travelerExists=t_gateway.checkTraveler(travelerID)
         
         if(travelerExists):
+            t_gateway.setPastTrips(travelerID)
             id=travelerExists[0]
             fname=travelerExists[1]
             lname=travelerExists[2]
@@ -34,7 +35,7 @@ class TravelerCatalog:
         t_gateway.insertTraveler(t)
         self.add(t)
         t.createReservation()
-        
+        t_gateway.closeConnection()
         return t
     
     def add(self,traveler:Traveler):

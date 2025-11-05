@@ -19,14 +19,18 @@ class Trip:
         self.reservations.append(reservation)
     
     def addConnection(self,connectionChoice):
+        print(type(connectionChoice))
+        
         self.connection.append(connectionChoice)
-        isMultiStop= len (connectionChoice)
         trip_gateway= TripGateway()
-        directID= (connectionChoice[0].route_ID)
-        multiID=""
-        if (isMultiStop>1):
+        
+        if (type(connectionChoice) is tuple):
+            directID= (connectionChoice[0].route_ID)
             multiID= connectionChoice[1].route_ID
-        tripID=trip_gateway.insertTrip(self.status,directID,multiID)
+            tripID=trip_gateway.insertTrip(self.status,directID,multiID)
+        else:
+            directID=connectionChoice.route_ID
+            tripID=trip_gateway.insertTrip(self.status,directID)
         self.setID("A"+str(tripID))
         trip_gateway.closeConnection()
         
