@@ -1,0 +1,38 @@
+import sqlite3
+from pathlib import Path
+
+class TicketGateway:
+    
+    
+    def __init__(self):
+        BASE_DIR = Path(__file__).resolve().parents[1]
+        DB_PATH  = BASE_DIR / "database" / "soen342project.db"
+        self.conn = sqlite3.connect(DB_PATH)
+        self.cur = self.conn.cursor()
+    
+    def getNewTicketID(self):
+        self.cur.execute("SELECT COUNT(*) FROM ticket")
+        return self.cur.fetchone()[0]
+    
+    def insertTicket(self):
+       
+        self.cur.execute("""
+                INSERT INTO ticket DEFAULT VALUES
+                """)
+        self.conn.commit()
+        
+        return self.cur.lastrowid
+        
+        
+    def insertReservationID(self,ticketID):
+        self.cur.execute("SELECT id FROM reservation WHERE ticketId = :ticketID ",{"ticketID":ticketID})
+        reservationId=self.cur.fetchone()[0]
+        self.cur.execute("""
+                         UPDATE ticket
+                         SET reservationId = :reservationId
+                         WHERE id = :ticketID
+                         """,{"reservationId":reservationId,"ticketID":ticketID})
+        self.conn.commit()
+        
+    def closeConnection(self):
+        self.conn.close()

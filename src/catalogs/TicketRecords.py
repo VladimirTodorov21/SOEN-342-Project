@@ -1,13 +1,20 @@
 from typing import List
 from Ticket import *
 import Reservation
+from gateways.TicketGateway import TicketGateway
 class TicketRecords:
    
     def __init__(self):
         self.tickets: List[Ticket]=[]
         
     def makeTicket(self,reservation:Reservation.Reservation):
-        ticketID=len(self.tickets)+1
+        ticket_gateway=TicketGateway()
+        ticketID=ticket_gateway.insertTicket()
+        ticket_gateway.closeConnection()
+        
+        
+        
+        
         ticket=Ticket(ticketID,reservation)
         self.add(ticket)
         return ticket

@@ -1,6 +1,7 @@
 CREATE TABLE soen342project.connection (
     route_id INT PRIMARY KEY,
     departure_city VARCHAR(50) NOT NULL,
+    arrival_city VARCHAR(50) NOT NULL,
     departure_time VARCHAR(50) NOT NULL,
     arrival_time VARCHAR(50) NOT NULL,
     train_type VARCHAR(50) NOT NULL,
@@ -11,25 +12,28 @@ CREATE TABLE soen342project.connection (
 
 CREATE TABLE soen342project.trip (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    reservationId INTEGER,
-    routeId INT,
+    trip_code TEXT GENERATED ALWAYS AS ('A' || id) VIRTUAL,
     status VARCHAR (50),
-    FOREIGN KEY (reservationId) REFERENCES reservation (id),
-    FOREIGN KEY (routeId) REFERENCES connection (route_id)
+    directConnectionID INT NOT NULL,
+    multiStopConnectionID INT,
+    FOREIGN KEY (directConnectionID) REFERENCES connection (route_id),
+    FOREIGN KEY (multiStopConnectionID) REFERENCES connection (route_id)
 );
 
 CREATE TABLE soen342project.reservation (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     travelerId INTEGER,
     ticketId INTEGER,
+    tripID INTEGER,
+    FOREIGN KEY (tripID) REFERENCES trip (tripId)
     FOREIGN KEY (travelerId) REFERENCES traveler (travelerId),
     FOREIGN KEY (ticketId) REFERENCES ticket (id)
 );
 
 CREATE TABLE soen342project.traveler (
-    travelerId INTEGER PRIMARY KEY AUTOINCREMENT,
-    reservationId INTEGER,
-    travelerName VARCHAR(50) NOT NULL,
+    travelerId INTEGER PRIMARY KEY ,
+    travelerFName TEXT,
+    travelerLName VARCHAR(50) NOT NULL,
     travelerAge VARCHAR(50) NOT NULL,
     FOREIGN KEY (reservationId) REFERENCES reservation (id)
 );
@@ -37,7 +41,7 @@ CREATE TABLE soen342project.traveler (
 CREATE TABLE soen342project.ticket (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     reservationId INTEGER,
-    FOREIGN KEY (reservationId) REFERENCES reservation (ID)
+    FOREIGN KEY (reservationId) REFERENCES reservation (id)
 );
 
 CREATE TABLE soen342project.trip_catalog (
