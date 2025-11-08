@@ -19,18 +19,19 @@ class Trip:
         self.reservations.append(reservation)
     
     def addConnection(self,connectionChoice):
-        print(type(connectionChoice))
         
         self.connection.append(connectionChoice)
         trip_gateway= TripGateway()
+
+        departure_day_str=self.departure_day.strftime("%Y-%m-%d")
         
-        if (type(connectionChoice) is tuple):
+        if (isinstance(connectionChoice,tuple)):
             directID= (connectionChoice[0].route_ID)
             multiID= connectionChoice[1].route_ID
             tripID=trip_gateway.insertTrip(self.status,directID,multiID)
         else:
             directID=connectionChoice.route_ID
-            tripID=trip_gateway.insertTrip(self.status,directID)
+            tripID=trip_gateway.insertTrip(self.status,departure_day_str,directID)
         self.setID("A"+str(tripID))
         trip_gateway.closeConnection()
         
@@ -51,3 +52,6 @@ class Trip:
     
     def getStatus(self):
         return self.status
+    
+    def format(self):
+        return (f"Trip ID: {self.trip_id},Status:{self.status}, Departure Day:{self.departure_day.strftime('%Y-%m-%d')}")

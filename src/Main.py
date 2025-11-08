@@ -4,8 +4,12 @@ from ConnectionCatalog import *
 from catalogs.TicketRecords import TicketRecords
 from catalogs.TravelerCatalog import TravelerCatalog
 from catalogs.TripCatalog import TripCatalog
+from gateways.TripGateway import TripGateway
+from gateways.TripCatalogGateway import TripCatalogGateway
 import csv
 import os
+import sqlite3
+
 
 
 class Main:    
@@ -16,8 +20,18 @@ class Main:
         self.tripCatalog = TripCatalog()
         
   
-    def bookTrip(self,numTravelers, connectionChoice,tripStatus): #add Connection(s) here     
+    def bookTrip(self,numTravelers, connectionChoice,tripStatus): #add Connection(s) here    
+
+          
+
           trip=self.tripCatalog.makeTrip(tripStatus)
+
+          trip_gateway= TripGateway()
+          trip_id= trip_gateway.insertTrip(status=tripStatus,
+                                           directID=connectionChoice.route_ID if not isinstance(connectionChoice, tuple) else connectionChoice[0].route_ID,
+                                           multiID =connectionChoice[1].route_ID if isinstance(connectionChoice, tuple) else None
+                                           )
+          trip.setID(trip_id)
         
          #insert trip into DB and setting trip ID here
           trip.addConnection(connectionChoice)
@@ -28,7 +42,12 @@ class Main:
             lname=input("Input Traveler Last Name: ").strip()
             age=input("Input Traveler age: ").strip()
             travelerID=input("Input Traveler ID:").strip()
+
             
+            if self.tripCatalog.existingReservation(travelerID,trip.getID()):
+                print(f"A reservation has already been created witht this traveler ID: {travelerID}. Please try again with a different ID.\n")
+                continue
+
             #inserting traveler into DB or checking if they already exist through id
             traveler=self.travelerCatalog.makeTraveler(travelerID,fname,lname,age)
             print(f"\nReservation Created for {traveler.getFName()} {traveler.getLName()} with Traveler ID: {traveler.getID()}\n")
@@ -40,8 +59,26 @@ class Main:
             #inserting resrevation into DB
             reservation[len(reservation)-1].setTicket(ticket,trip.getID())
             print(f"Ticket created with unique ID {ticket.getID()}\n")
-            #inserting reservation id into ticket
-            ticket.insertReservationDB()
+
+            cursor=trip_gateway.conn.cursor()
+            try:
+                cursor.execute(""" 
+                            
+                    INSERT INTO reservation (travelerId, ticketId, tripID)
+                    VALUES (?,?,?)
+
+                """, (travelerID,ticket.getID(),trip.getID()))
+
+                print(f"reservation created for traveler: {travelerID} on trip: {trip.getID()}\n")
+
+            except sqlite3.IntegrityError:
+
+                print("Traveler already has a reservation for this trip.")   
+
+            trip_gateway.conn.commit()
+
+            #checking reservation id
+            linked_reservation_id=ticket.checkReservationDB()
             
             trip.addReservation(reservation[len(reservation)-1])
             
@@ -53,47 +90,44 @@ class Main:
             print(f"Direct Trip from {connectionChoice.getDepartureCity()} to {connectionChoice.getArrivalCity()} has been booked for {numTravelers} travelers!\n")
 
     def viewTrips(self,lname:str,traveler_id:str):
-        trip_found= []
-        for trip in self.tripCatalog.getTrips(): 
-            for reservation in trip.getReservations():
-                traveler = reservation.getTraveler()
 
-                if (traveler.getLName().lower()==lname.lower()) and (str(traveler.getID())==traveler_id):
-                    trip_found.append((trip,reservation))
+        """ Print trips depending on status of booked trip by traveler """
 
-        if not(trip_found): 
-            print("\nNo trips were found linked to this traveler \n")
-            return
-                
-        present_trip=[]
-        past_trip=[]
-        today=datetime.today()
+        lname=lname.strip()
+        traveler_id=traveler_id.strip()
 
-        for (trip,reservation) in trip_found: 
+        gateway=TripCatalogGateway()
+        rows= gateway.getTripsStatus(traveler_id,lname)
+        gateway.closeConnection()
 
-            dep_day=trip.getDepartureDay()
+        trip_status={
+            "Completed": "Past Trips",
+            "Present": "Present Trips",
+            "Future": "Future Trips"}
+        
+        trip_exist=False
 
-            if dep_day.date()< today.date():
-                past_trip.append((trip,reservation))
-            elif dep_day.date()==today.date():
-                present_trip.append((trip,reservation))
+        for db_status,label in trip_status.items():
 
-        print(f"\n--- The trips that were found for {lname} with ID: {traveler_id} ---\n")
+            print(f"\n--- {label} ---\n")
 
-        #current trips
-        if present_trip:
-            print("Current Trips:\n")
-            for trip,reservation in present_trip:
-                self.printTrip(trip,reservation)
+            exist=False
 
-        #past trips
-        if past_trip:
-            print("Trip History:\n")
-            for trip,reservation in past_trip:
-                self.printTrip(trip,reservation)  
+            for trip_code,status,ticket_id,fname,lname,age in rows:
 
-        if not(past_trip): 
-            print("\n No past trips have been found. Ending view trips.")
+                if status.lower()==db_status.lower():
+                    exist=True
+                    trip_exist=True
+                    print(f"Trip ID: {trip_code}")
+                    print(f"Ticket ID: {ticket_id}")
+                    print(f"Traveler: {fname} {lname} (Age: {age})")   
+                    print("--------------------------")
+
+            if not exist:
+                print(f"No {label.lower()} trips found.") 
+
+        if not (trip_exist):
+            print("No trips found for this traveler.\n")
 
     def printTrip(self,trip,reservation):
             ticket=reservation.getTicket()

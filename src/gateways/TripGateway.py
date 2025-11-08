@@ -5,32 +5,32 @@ class TripGateway:
     
     
     def __init__(self):
-        BASE_DIR = Path(__file__).resolve().parents[1]
-        DB_PATH  = BASE_DIR / "database" / "soen342project.db"
-        self.conn = sqlite3.connect(DB_PATH)
+        BASE_DIR = Path(__file__).resolve().parents[2]
+        DB_PATH  = BASE_DIR / "src" / "database" / "soen342project.db"
+        print(f"Connected to database at: {DB_PATH}")
+
+        self.conn = sqlite3.connect(DB_PATH,timeout=10)
         self.cur = self.conn.cursor()
-    
-    def getNewTripID(self):
-        self.cur.execute("SELECT COUNT(*) FROM trip")
-        return self.cur.fetchone()[0]
+
+
     
  
     def insertTrip(self,status,directID,multiID=""):
         
         row ={
             "status":status,
-            "destination":directID,
-            "layover":  multiID
+            "directConnectionID":directID,
+            "MultStopConnectionID":  multiID
         }
         
         self.cur.execute("""
-                    INSERT INTO trip
-                    (status,directConnectionID,multiStopConnectionID) 
+                    INSERT INTO trip (status, directConnectionID,multiStopConnectionID) 
                     VALUES(
                         
                         :status,
-                        :destination,
-                        :layover
+                        :directConnectionID,
+                        :MultStopConnectionID
+                        
                     )
                         
                          """,row)

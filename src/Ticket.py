@@ -21,7 +21,8 @@ class Ticket:
     def getReservation(self):
         return self.reservation
     
-    def insertReservationDB(self):
+    def checkReservationDB(self):
         ticket_gateway=TicketGateway()
-        ticket_gateway.insertReservationID(self.ticket_id)
+        reservation_id= ticket_gateway.checkReservationForTicket(self.ticket_id)
         ticket_gateway.closeConnection()
+        return reservation_id

@@ -24,15 +24,18 @@ class TicketGateway:
         return self.cur.lastrowid
         
         
-    def insertReservationID(self,ticketID):
+    def checkReservationForTicket(self,ticketID):
         self.cur.execute("SELECT id FROM reservation WHERE ticketId = :ticketID ",{"ticketID":ticketID})
-        reservationId=self.cur.fetchone()[0]
-        self.cur.execute("""
-                         UPDATE ticket
-                         SET reservationId = :reservationId
-                         WHERE id = :ticketID
-                         """,{"reservationId":reservationId,"ticketID":ticketID})
-        self.conn.commit()
+        row=self.cur.fetchone()
+
+        if row is not None:
+            reservation_id=row[0]
+            print(f"Ticket {ticketID} linked to reservation {reservation_id}")
+            return reservation_id
+        else:
+            print(f"Ticket {ticketID} not linked to any reservation")
+            return None
+
         
     def closeConnection(self):
         self.conn.close()
