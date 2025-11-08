@@ -39,3 +39,4 @@ class Traveler:
     def createReservation(self):
         reservation = Reservation.Reservation(self)
         self.reservation.append(reservation)
+        return reservation
