@@ -11,8 +11,8 @@ Members Present:
 
 Structure:
 - Planning and Distribution of tasks
-- - OCL for method creating a reservation (Vlad)
-- - OCL for class representing reservation (Vlad)
+- - OCL for method creating a reservation
+- - OCL for class representing reservation
 - - UML state machine for the behavior under Use case book a Trip
 - - 5-minute video recording
 
