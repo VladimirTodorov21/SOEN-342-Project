@@ -1,0 +1,23 @@
+=============================
+|         Meeting 6         |
+=============================
+
+Date Present: 10 November 2025
+Time Spent: 7:50 PM - 8:10 PM
+
+Members Present:
+- Vladimir
+- Mohamad
+
+Structure:
+- Planning and Distribution of tasks
+- - OCL for method creating a reservation (Vlad)
+- - OCL for class representing reservation (Vlad)
+- - UML state machine for the behavior under Use case book a Trip
+- - 5-minute video recording
+
+Additional Task and Remaining Changes:
+- - Printing past trip history in collection
+- - Fix View Trip filtering
+- - Adjusting the menu to eliminate execution errors upon wrong inputs
+- - Adding the updated UML Class diagram
