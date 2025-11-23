@@ -14,15 +14,8 @@ class TravelerCatalog:
         travelerExists=t_gateway.checkTraveler(travelerID)
         
         if(travelerExists):
-            t_gateway.setPastTrips(travelerID)
-            id=travelerExists[0]
-            fname=travelerExists[1]
-            lname=travelerExists[2]
-            age=travelerExists[3]
-            existingTraveler=Traveler(id,fname,lname,age)
-            existingTraveler.createReservation()
-            self.add(existingTraveler)
-            return existingTraveler
+            t_gateway.closeConnection()
+            raise ValueError(f"This traveler ID {travelerID} already exists. Please try another one.")
         
         # commented out since we use the traveler table to find inputted travelerID  
         # for traveler in self.travelers:
