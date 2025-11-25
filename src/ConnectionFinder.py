@@ -16,6 +16,10 @@ class ConnectionFinder:
        self.connectionChoice:List[Connection]=[]
 
     def setConnectionChoice(self):
+          
+          if not self.direct_connections and not self.multi_stop_connections:
+               return
+
           connectionTypeChoice = ""
           while True:
                connectionTypeChoice = input("Choose your connection ('d' for direct connection or 'm' for multistop connection): ")
@@ -162,7 +166,8 @@ class ConnectionFinder:
                  print("----------------------------------------\n")
 
         if not self.direct_connections and not self.multi_stop_connections:
-             print("There are no connections that were found matching your criteria")
+             print("No connections found matching your criteria. Please try again with different criteria.\n")
+             return
 
                     
 
@@ -203,7 +208,6 @@ class ConnectionFinder:
     def sortingChoice(self,search):
         connection_options=len(self.direct_connections)+len(self.multi_stop_connections)
         if connection_options==0:
-               print("\nThere isn't any connection that matches the criteria you provided.")
                return
 
         if connection_options>1:

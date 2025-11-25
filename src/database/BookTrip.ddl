@@ -22,7 +22,7 @@ CREATE TABLE trip (
 
 
 CREATE TABLE traveler (
-    travelerId INTEGER PRIMARY KEY ,
+    travelerId INTEGER PRIMARY KEY AUTOINCREMENT ,
     travelerFName TEXT NOT NULL,
     travelerLName VARCHAR(50) NOT NULL,
     travelerAge VARCHAR(50) NOT NULL

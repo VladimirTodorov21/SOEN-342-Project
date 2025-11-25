@@ -15,7 +15,7 @@ class TripCatalogGateway:
 
     def getTrips(self,traveler_id,last_name=None):
 
-        query = ("""
+        query = """
                  
             SELECT  trip.trip_code, 
                     trip.status, 
@@ -29,13 +29,18 @@ class TripCatalogGateway:
             JOIN traveler ON reservation.travelerId = traveler.travelerId                
             WHERE traveler.travelerId = ?  
 
-                 """)
+                 """
+        parameter = [traveler_id]
+
+        if last_name:
+            query += " AND LOWER(traveler.travelerLName) = LOWER(?)"
+            parameter.append(last_name.strip())
         
         
-        self.cur.execute(query,[traveler_id])
+        self.cur.execute(query,parameter)
         return self.cur.fetchall()
     
-    def getTripsStatus(self,traveler_id,last_name,status=None):
+    def getTripsStatus(self,traveler_id,last_name=None,status=None):
 
 
 
@@ -57,12 +62,17 @@ class TripCatalogGateway:
         
         
         
-        params = [traveler_id]
+        parameter = [traveler_id]
+
+        if last_name:
+            query += " AND LOWER(traveler.travelerLName) = LOWER(?)"
+            parameter.append(last_name.strip())
+
         if status:
             query += " AND LOWER(trip.status) = LOWER(?)"
-            params.append(status)
+            parameter.append(status)
 
-        self.cur.execute(query, params)
+        self.cur.execute(query, parameter)
         return self.cur.fetchall()    
     
     def closeConnection(self):

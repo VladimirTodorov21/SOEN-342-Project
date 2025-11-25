@@ -11,6 +11,13 @@ class TravelerGateway:
     
       
     def insertTraveler(self,traveler:Traveler):
+
+        self.cur.execute("""
+                         SELECT 1 FROM traveler WHERE travelerId=?
+                         """,(traveler.getID(),))
+        if self.cur.fetchone():
+            raise ValueError(f"This traveler ID {traveler.getID()} already exists. Please try another one.")
+
         row = {
         "traveler_id":traveler.getID(),
         "traveler_fname":traveler.getFName(),
@@ -51,13 +58,13 @@ class TravelerGateway:
         
         tripIDs=self.cur.fetchall()
       
-        for id in tripIDs:
+        for (trip_id,) in tripIDs:
             self.cur.execute("""
                          UPDATE trip
                          SET status= 'Completed'
-                         WHERE tripId = ?
+                         WHERE trip_code = ?
                            AND status= 'Present'
-                         """,id)
+                         """,(trip_id,))
         
         self.conn.commit()
         

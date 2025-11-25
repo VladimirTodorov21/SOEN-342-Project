@@ -6,6 +6,7 @@ from catalogs.TravelerCatalog import TravelerCatalog
 from catalogs.TripCatalog import TripCatalog
 from gateways.TripGateway import TripGateway
 from gateways.TripCatalogGateway import TripCatalogGateway
+from catalogs.TravelerCatalog import TravelerCatalog
 import csv
 import os
 import sqlite3
@@ -22,71 +23,76 @@ class Main:
   
     def bookTrip(self,numTravelers, connectionChoice,tripStatus): #add Connection(s) here    
 
-          
-
-          trip=self.tripCatalog.makeTrip(tripStatus)
-
-          trip_gateway= TripGateway()
-          trip_id= trip_gateway.insertTrip(status=tripStatus,
-                                           directID=connectionChoice.route_ID if not isinstance(connectionChoice, tuple) else connectionChoice[0].route_ID,
-                                           multiID =connectionChoice[1].route_ID if isinstance(connectionChoice, tuple) else None
+        trip=self.tripCatalog.makeTrip(tripStatus)
+        trip_gateway= TripGateway()
+        trip_id= trip_gateway.insertTrip(status=tripStatus,
+                                       directID=connectionChoice.route_ID if not isinstance(connectionChoice, tuple) else connectionChoice[0].route_ID,
+                                       multiID =connectionChoice[1].route_ID if isinstance(connectionChoice, tuple) else None
                                            )
-          trip.setID(trip_id)
+        trip.setID(trip_id)
+
+        travelerCatalog=TravelerCatalog()
         
-         #insert trip into DB and setting trip ID here
-          trip.addConnection(connectionChoice)
-          print(f"\n---Booking a trip for {numTravelers} travelers---\n")
+        #insert trip into DB and setting trip ID here
+        trip.addConnection(connectionChoice)
+        print(f"\n---Booking a trip for {numTravelers} travelers---\n")
 
-          for i in range(int(numTravelers)):
-            fname=input("Input Traveler First Name: ").strip()
-            lname=input("Input Traveler Last Name: ").strip()
-            age=input("Input Traveler age: ").strip()
-            travelerID=input("Input Traveler ID:").strip()
+        for i in range(int(numTravelers)):
+            while True:
+                fname=input("Input Traveler First Name: ").strip()
+                lname=input("Input Traveler Last Name: ").strip()
+                age=input("Input Traveler age: ").strip()
+                travelerID=input("Input Traveler ID:").strip()
 
+                #check for duplication of traveler ID in DB and catalog
+                try:
+                    traveler = travelerCatalog.makeTraveler(travelerID,fname,lname,age)
+                    print(f"\nTraveler {fname} {lname} with ID {travelerID} created successfully.\n")
+                
+                except ValueError as er:
+                    print(str(er))
+                    continue
+
+                #check reservation duplication
+                if self.tripCatalog.existingReservation(travelerID,trip.getID()):
+                    print(f"A reservation has already been created witht this traveler ID: {travelerID}. Please try again with a different ID.\n")
+                    continue
+
+                reservation=traveler.getReservation()
+
+                #creating a new ticketID here and
+                ticket=self.ticketRecord.makeTicket(reservation[len(reservation)-1])
+                
+                #inserting resrevation into DB
+                reservation[len(reservation)-1].setTicket(ticket,trip.getID())
+                print(f"Ticket created with unique ID {ticket.getID()}\n")
+
+                cursor=trip_gateway.conn.cursor()
+                try:
+                    cursor.execute(""" 
+                                
+                        INSERT INTO reservation (travelerId, ticketId, tripID)
+                        VALUES (?,?,?)
+
+                    """, (travelerID,ticket.getID(),trip.getID()))
+
+                    print(f"reservation created for traveler: {travelerID} on trip: {trip.getID()}\n")
+
+                except sqlite3.IntegrityError:
+
+                    print("Traveler already has a reservation for this trip.")   
+
+                trip_gateway.conn.commit()
+                
+                trip.addReservation(reservation[len(reservation)-1])
+
+                break
             
-            if self.tripCatalog.existingReservation(travelerID,trip.getID()):
-                print(f"A reservation has already been created witht this traveler ID: {travelerID}. Please try again with a different ID.\n")
-                continue
-
-            #inserting traveler into DB or checking if they already exist through id
-            traveler=self.travelerCatalog.makeTraveler(travelerID,fname,lname,age)
-            print(f"\nReservation Created for {traveler.getFName()} {traveler.getLName()} with Traveler ID: {traveler.getID()}\n")
-            reservation=traveler.getReservation()
-
-            #creating a new ticketID here and
-            ticket=self.ticketRecord.makeTicket(reservation[len(reservation)-1])
-            
-            #inserting resrevation into DB
-            reservation[len(reservation)-1].setTicket(ticket,trip.getID())
-            print(f"Ticket created with unique ID {ticket.getID()}\n")
-
-            cursor=trip_gateway.conn.cursor()
-            try:
-                cursor.execute(""" 
-                            
-                    INSERT INTO reservation (travelerId, ticketId, tripID)
-                    VALUES (?,?,?)
-
-                """, (travelerID,ticket.getID(),trip.getID()))
-
-                print(f"reservation created for traveler: {travelerID} on trip: {trip.getID()}\n")
-
-            except sqlite3.IntegrityError:
-
-                print("Traveler already has a reservation for this trip.")   
-
-            trip_gateway.conn.commit()
-
-            #checking reservation id
-            linked_reservation_id=ticket.checkReservationDB()
-            
-            trip.addReservation(reservation[len(reservation)-1])
-            
-          self.tripCatalog.addTrip(trip)
-          if isinstance(connectionChoice, tuple):
+        self.tripCatalog.addTrip(trip)
+        if isinstance(connectionChoice, tuple):
             connection_1, connection_2 = connectionChoice
             print(f"Multi-stop Trip from {connection_1.getDepartureCity()} to {connection_2.getArrivalCity()} has been booked for {numTravelers} travelers!\n")
-          else:
+        else:
             print(f"Direct Trip from {connectionChoice.getDepartureCity()} to {connectionChoice.getArrivalCity()} has been booked for {numTravelers} travelers!\n")
 
     def viewTrips(self,lname:str,traveler_id:str):
@@ -99,6 +105,13 @@ class Main:
         gateway=TripCatalogGateway()
         rows= gateway.getTripsStatus(traveler_id,lname)
         gateway.closeConnection()
+
+        
+
+        if not rows:
+            print(f"No traveler found with ID: {traveler_id} and last name {lname}\n")
+            return
+
 
         trip_status={
             "Completed": "Past Trips",
@@ -176,6 +189,10 @@ class Main:
 
                         connectionFinder.findConnections(search)
                         connectionFinder.printConnections()
+
+                        if not connectionFinder.direct_connections and not connectionFinder.multi_stop_connections:
+                            break
+
                         connectionFinder.sortingChoice(search)
                         connectionFinder.setConnectionChoice()
     
