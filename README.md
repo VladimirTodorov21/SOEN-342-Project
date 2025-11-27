@@ -23,3 +23,7 @@ Step 5: Copy the GitHub repository link and clone it on git
 git clone "repository-link"
 
 Step 6: On your IDE, run Main.py and follow the code prompts
+
+### Demo Video
+
+https://www.youtube.com/watch?v=Tkv1jvWB2t8
